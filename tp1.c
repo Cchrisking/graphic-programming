@@ -11,12 +11,15 @@ PointCloud point;
 void init_point(PointCloud* point){
   point->tab_size=0;
 }
+int point_depart=0;
 void add_points(PointCloud *point, int x, int y);
+void remove_points(PointCloud *point, int x, int y);
 void window_reshape(int width, int height);
 void render_scene();
 void draw_lines();
 void window_display();
 void mouse_click(int bouton, int state, int x, int y);
+void keyboard_press (unsigned char key , int x , int y);
 int main(int argc, char** argv){
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
@@ -25,6 +28,7 @@ int main(int argc, char** argv){
   glutDisplayFunc(window_display);
   glutReshapeFunc(window_reshape);
   glutMouseFunc(mouse_click);
+  glutKeyboardFunc(keyboard_press);
   glutMainLoop();
   return 0;
 }
@@ -52,10 +56,11 @@ void render_scene(){
     glVertex2d(-128, 128);
   glEnd();
 }
+/*2 Dessiner avec souris glBegin(GL_POLYGON) pour Dessiner polygone GL_LINES pour ligne droit */
 void draw_lines(){
   glColor3f(0.3, 0.1,0.5);
-  glBegin(GL_LINES);
-  for (int i= 0; i < point.tab_size; i++) {
+  glBegin(GL_POLYGON);
+  for (int i= point_depart; i < point.tab_size; i++) {
     glVertex2d(point.tabPos[i][0],point.tabPos[i][1]);
   }
   glEnd();
@@ -63,7 +68,21 @@ void draw_lines(){
 void mouse_click(int bouton, int state, int x, int y){
   int xprim=x-(WIDTH/2);
   int yprim=-1*(y-(HEIGHT/2));
+  /*ajoute un point dans structure de donnee*/
   if(state==GLUT_DOWN && bouton ==GLUT_LEFT_BUTTON){
+    add_points(&point, xprim, yprim);
+  }
+  /*click droit supprime le derniere point dans la structure*/
+  if(state==GLUT_DOWN && bouton == GLUT_RIGHT_BUTTON){
+    remove_points(&point, xprim, yprim);
+  }
+  glutPostRedisplay();
+}
+/*ajoute un poit si o click sur espace*/
+void keyboard_press (unsigned char key , int x , int y ){
+  int xprim=x-(WIDTH/2);
+  int yprim=-1*(y-(HEIGHT/2));
+  if(key==32||key==112||key==80){
     add_points(&point, xprim, yprim);
   }
   glutPostRedisplay();
@@ -72,4 +91,11 @@ void add_points(PointCloud *point, int x, int y){
   point->tabPos[point->tab_size][0]=x;
   point->tabPos[point->tab_size][1]=y;
   point->tab_size+=1;
+}
+void remove_points(PointCloud *point, int x, int y){
+  point->tabPos[point->tab_size][0]=0;
+  point->tabPos[point->tab_size][1]=0;
+  if(point->tab_size>0){
+    point->tab_size-=1;
+  }
 }
