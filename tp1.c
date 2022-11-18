@@ -40,6 +40,7 @@ void render_scene(){
 /*2 Dessiner avec souris glBegin(GL_POLYGON) pour Dessiner polygone GL_LINES pour ligne droit */
 void draw_lines(){
   glColor3f(0.3, 0.1,0.5);
+  glPointSize(10.0f);
   glBegin(GL_POLYGON);
   for (int i= point_depart; i <= point.tab_size; i++) {
     glVertex2d(point.tabPos[i][0],point.tabPos[i][1]);
