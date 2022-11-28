@@ -1,4 +1,5 @@
 #include "header/header.h"
+#include "header/implement.h"
 int main(int argc, char** argv) {
   init_point(&point);
   glutInit(&argc, argv);
@@ -22,41 +23,22 @@ void window_reshape(int width, int height){
 void window_display(){
   glClear(GL_COLOR_BUFFER_BIT);
   glLoadIdentity();
-  segment_bresenham_general(-125, 125, 125, 125);
-  segment_bresenham_general(125, 125, 125, -125);
-  segment_bresenham_general(-125, 125, -125, -125);
-  segment_bresenham_general(-125, -125, 125, -125);
-  cohen_sutherland(-60, 180, 60, 180, -125, -125, 125, 125);
-  cohen_sutherland(0, 10, 1, 180, -125, -125, 125, 125);
-  /*for(int i=0; i < point.tab_size && point.tab_size >=i; i+=2){
-      if(point.tab_size>=i+2)
-          cohen_sutherland(
-            point.tabPos[i][0],
-            point.tabPos[i+1][0],
-            point.tabPos[i][1],
-            point.tabPos[i+1][1],
-            -125, -125, 125, 125);
-  }*/
+  segment_bresenham_general(-125, 125, 125, 125,1.0,1.0,1.0);
+  segment_bresenham_general(125, 125, 125, -125,1.0,1.0,1.0);
+  segment_bresenham_general(-125, 125, -125, -125,1.0,1.0,1.0);
+  segment_bresenham_general(-125, -125, 125, -125,1.0,1.0,1.0);
+  cohen_sutherland(-140,0,0,60,-125, -125, 125, 125,0.0,0.0,1.0);
   if ((point.tab_size-1)==1|| ((point.tab_size-1)>1&&((point.tab_size-1)%2)!=0)) {
     cohen_sutherland(
       point.tabPos[point.tab_size-1][0],
       point.tabPos[point.tab_size-1][1],
       point.tabPos[point.tab_size-2][0],
       point.tabPos[point.tab_size-2][1],
-      -125, -125, 125, 125);
+      -125, -125, 125, 125,0.0,0.0,1.0);
   }
   glFlush();
 }
-/*2 Dessiner avec souris glBegin(GL_POLYGON) pour Dessiner polygone GL_LINES pour ligne droit */
-void draw_pixel(float x, float y){
-  glColor3f(1.0, 1.0,1.0);
-  glBegin(GL_POINTS);
-    glVertex2f(x,y);
-  glEnd();
-}
-float delta(float pointFinal, float pointDepart){
-  return pointFinal-pointDepart;
-}
+
 codeSeg initCodeSeg(){
     codeSeg codeseg;
     codeseg.somme = 0;
@@ -103,7 +85,7 @@ bool gauche(codeSeg code){
 bool droite(codeSeg code){
   return code.inferieur;
 }
-void cohen_sutherland(int xa, int ya, int xb, int yb, int xmin, int ymin, int xmax, int ymax){
+void cohen_sutherland(int xa, int ya, int xb, int yb, int xmin, int ymin, int xmax, int ymax, float r, float g, float b){
   int x;
   int y;
   int i=0;
@@ -165,54 +147,10 @@ void cohen_sutherland(int xa, int ya, int xb, int yb, int xmin, int ymin, int xm
       }
     }
       if(accept){
-        segment_bresenham_general(xa,ya,xb,yb);
+        segment_bresenham_general(xa,ya,xb,yb,r,g,b);
       }
     }
 }
-/* ############################################### */
-void segment_bresenham(int xa, int ya, int xb, int yb, int incrx, int incry, float dy, float dx, int inverse){
-  float incr_est = 2*dy;
-  float incr_nord_est= 2*(dy-dx);
-  float dp = 2*(dy -dx);
-  float y = ya;
-  for (float x=xa; x!=xb; x+=incrx){
-      if(inverse==1)
-      draw_pixel(x, y);
-      else{
-      draw_pixel(y,x);
-    }
-      if(dp<=0){
-          dp+=incr_est;
-      }
-      else{
-          y+=incry;
-          dp+=incr_nord_est;
-      }
-  }
-}
-void segment_bresenham_general(int xa, int ya, int xb, int yb){
-  float dx=delta(xb, xa);
-  float dy=delta(yb, ya);
-  GLfloat incrx, incry;
-  if (dx > 0){
-    incrx =1;
-  }else{
-   incrx = -1;
-   dx = -dx;
- }
- if(dy > 0){
-   incry = 1;
- }else{
-   incry = -1;
-   dy = -dy;
- }
- if (dx >= dy){
-   segment_bresenham(xa, ya, xb, yb,incrx, incry,dy,dx,1);
-}else{
-      /*Inverser x et y dans l’algorithme précédent */
-      segment_bresenham(ya, xa, yb, xb,incry, incrx,dx,dy,0);
-}
- }
  void mouse_click(int bouton, int state, int x, int y){
    int click_counter=0;
    GLfloat xprim=x-WIDTH/2;

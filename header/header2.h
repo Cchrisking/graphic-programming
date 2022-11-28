@@ -11,6 +11,10 @@ typedef struct{
   GLfloat tabPos [MAX_POINT_ON_FRAME][2];
   int tab_size;
 }PointCloud;
+typedef struct{
+  float abscisse;
+  float ordonnee;
+}Point;
 PointCloud point;
 void init_point(PointCloud* point){
   point->tab_size=0;
@@ -63,3 +67,7 @@ void intersection(int xa, int ya, int xb, int yb, float r, float g, float b);
 void translation(int poly[][2],int n,float dx,float dy, float r, float g, float b);
 void scaling(int poly[][2],int n,float dX,float dY, float r, float g, float b);
 void rotation(int poly[][2],int n,float alpha, float r, float g, float b);
+/**
+Partie 2 courbe de Bezier
+**/
+void  discretisationUP(int m, float a, float b, float t[]);
