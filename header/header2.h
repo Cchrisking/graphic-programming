@@ -70,4 +70,11 @@ void rotation(int poly[][2],int n,float alpha, float r, float g, float b);
 /**
 Partie 2 courbe de Bezier
 **/
-void  discretisationUP(int m, float a, float b, float t[]);
+//1
+void  discretisation_espace_parametrique(int m, float a, float b, float t[]);
+//2
+Point calcul_un_point_courbe_bezier( float t, int n, Point p[]);
+//3
+void points_courbe_bezier(int m, int n, Point p[], Point q[]);
+//4
+void trassage_courbe_de_bezier(int n, int m, Point p[]);
