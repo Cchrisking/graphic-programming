@@ -1,0 +1,21 @@
+The de Boor algorithm is a method for evaluating B-splines. A B-spline is a piecewise defined polynomial curve that is used to approximate a set of data points.
+
+The de Boor algorithm works by recursively calculating the B-spline curve at a specific point using the control points and knots of the curve.
+
+Here is an outline of the de Boor algorithm:
+
+Define the degree p of the B-spline curve, the control points P[i], and the knots t[i].
+
+Calculate the knot span i of the point u at which you want to evaluate the B-spline curve. The knot span is the index of the knot interval that u falls in.
+
+Initialize an array d[i] of control points for the current step of the recursion, where i ranges from 0 to p. Set d[i] equal to P[i+k], where k is the knot span.
+
+For each step of the recursion:
+
+For i from p down to 0:
+For j from i down to 0:
+Calculate the weight factor w = (u - t[j+k-p]) / (t[i+1+k-p] - t[j+k-p]).
+Set d[j] = (1 - w) * d[j] + w * d[j+1].
+Decrement p by 1.
+The B-spline curve value at u is equal to d[0].
+That's the basic outline of the de Boor algorithm. I hope that helps! Let me know if you have any questions.
